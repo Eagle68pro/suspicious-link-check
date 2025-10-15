@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>⚠️ Suspicious Link Check</title>
+  <style>
+    :root{
+      --bg: #0b1020;
+      --card: #121833;
+      --text: #eaf0ff;
+      --muted: #9fb0d6;
+      --accent: #ffb703;
+      --danger: #ef4444;
+      --ok: #22c55e;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", monospace;
+      background: radial-gradient(1200px 800px at 20% -10%, #1b2450 0%, var(--bg) 55%), linear-gradient(180deg, #0b0f1a 0%, #0b1020 100%);
+      color: var(--text);
+      display:flex; align-items:center; justify-content:center; padding:24px;
+    }
+    .wrap{width:100%; max-width:760px}
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius: 20px; padding: 28px; box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+      backdrop-filter: blur(6px);
+    }
+    h1{margin:0 0 8px 0; font-size: clamp(24px, 4vw, 36px); letter-spacing:0.2px}
+    p.lead{margin:0 0 18px 0; color: var(--muted); line-height:1.5}
+    .badge{
+      display:inline-flex; align-items:center; gap:8px; font-size:14px; padding:8px 12px; border-radius:999px;
+      background: rgba(255, 183, 3, 0.12); color: #ffd166; border:1px solid rgba(255, 183, 3, 0.25);
+    }
+    .row{display:grid; grid-template-columns: 1fr; gap:16px}
+    @media(min-width:640px){ .row{ grid-template-columns: 1fr 1fr } }
+    .panel{background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:16px}
+    .scan{
+      display:flex; flex-direction:column; gap:12px; min-height:220px
+    }
+    .step{display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:12px; border:1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.03)}
+    .dot{width:10px; height:10px; border-radius:999px; background: #5863a8; box-shadow: 0 0 0 0 rgba(88,99,168, 0.6);}
+    .step.active .dot{ background: var(--accent); animation: pulse 1.2s ease-out infinite }
+    .step.ok .dot{ background: var(--ok) }
+    .step.warn .dot{ background: var(--danger) }
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 14px; color:#cfe0ff}
+    .hidden{display:none}
+    .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:16px}
+    button, a.btn{
+      appearance:none; border:none; cursor:pointer; text-decoration:none; color:#0b1020; font-weight:700;
+      background: linear-gradient(180deg, #ffd166, #ffb703); padding:12px 16px; border-radius:14px; box-shadow: 0 8px 20px rgba(255,183,3,0.28);
+    }
+    button.secondary, a.secondary{ background:transparent; color: var(--text); border:1px solid rgba(255,255,255,0.18)}
+    .footer{color: var(--muted); font-size: 13px; margin-top:14px}
+    @keyframes pulse{ to{ box-shadow: 0 0 0 12px rgba(88,99,168, 0) } }
+    #qrcode img{max-width:220px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.3);}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" role="dialog" aria-labelledby="title" aria-describedby="desc">
+      <div class="badge" aria-hidden="true">⚠️ Suspicious Link Check</div>
+      <h1 id="title">Before you click random links…</h1>
+      <p id="desc" class="lead">This safe demo shows what <em>could</em> happen when you open unknown links. Nothing here collects data or installs anything — it’s just a wake‑up call.</p>
+      <div class="row" style="margin-top:12px">
+        <div class="panel">
+          <!-- QR Code Image -->
+          <div id="qrcode" style="text-align:center; margin-bottom:12px;">
+            <img src="Scam_image_qrcode.png" alt="Scan this QR code to view suspicious link" />
+          </div>
+
+          <div class="scan" id="scan"></div>
+          <div class="actions">
+            <button id="start">Run Safe Demo</button>
+            <button class="secondary hidden" id="reset">Run Again</button>
+            <a class="secondary" href="https://phishingquiz.withgoogle.com/" target="_blank" rel="noopener noreferrer">Try a 2‑min phishing quiz</a>
+          </div>
+          <div class="footer" id="sim-note">Simulation only. No data leaves your device.</div>
+        </div>
+
+        <div class="panel">
+          <h3 style="margin-top:0">How to spot bad links</h3>
+          <ul style="line-height:1.6; margin-top:8px">
+            <li>Hover or long‑press to preview the full URL. Look for weird spellings or extra characters.</li>
+            <li>Be wary of urgency: “verify now”, “account locked”, “payment failed”.</li>
+            <li>Check the sender/domain matches what you expect (e.g., <span class="mono">support@company.com</span> vs <span class="mono">support@compaany‑security.com</span>).</li>
+            <li>When unsure, go directly to the site in a new tab instead of clicking the link.</li>
+            <li>Turn on browser Safe Browsing / SmartScreen and keep updates on.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="panel hidden" id="reveal" style="margin-top:16px">
+        <h3 style="margin-top:0">Good news: this was only a demo 🎉</h3>
+        <p class="lead" id="personal-msg">If this had been real, your accounts or money could have been at risk. Please avoid clicking unknown links.</p>
+        <ul style="line-height:1.6">
+          <li>Attackers often steal passwords with look‑alike login pages.</li>
+          <li>They use convincing logos, fake invoice PDFs, and scare tactics.</li>
+          <li>One click can trigger downloads or permissions you didn’t mean to grant.</li>
+        </ul>
+        <div class="actions">
+          <a class="btn" href="https://phishingquiz.withgoogle.com/" target="_blank" rel="noopener noreferrer">Practice spotting phishing</a>
+          <button class="secondary" id="reveal-reset">Show demo again</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const steps = [
+      { text: 'Inspecting link format…', kind: 'active', delay: 900 },
+      { text: 'Checking site reputation…', kind: 'active', delay: 900 },
+      { text: 'Looking for urgency / scare tactics…', kind: 'active', delay: 900 },
+      { text: 'Simulating a fake login page… (demo only)', kind: 'active', delay: 1000 },
+      { text: 'Would a password manager auto‑fill here? (hint: no)', kind: 'active', delay: 1000 },
+      { text: 'Conclusion: Risky link behavior detected.', kind: 'warn', delay: 800 }
+    ];
+
+    const scanEl = document.getElementById('scan');
+    const startBtn = document.getElementById('start');
+    const resetBtn = document.getElementById('reset');
+    const reveal = document.getElementById('reveal');
+    const revealReset = document.getElementById('reveal-reset');
+    const personalMsg = document.getElementById('personal-msg');
+
+    function makeStep(text, kind='active'){
+      const div = document.createElement('div');
+      div.className = `step ${kind}`;
+      div.innerHTML = `<span class="dot" aria-hidden="true"></span><span>${text}</span>`;
+      return div;
+    }
+
+    function clearScan(){
+      scanEl.innerHTML = '';
+      reveal.classList.add('hidden');
+      resetBtn.classList.add('hidden');
+      startBtn.disabled = false;
+      startBtn.textContent = 'Run Safe Demo';
+    }
+
+    async function runScan(){
+      clearScan();
+      startBtn.disabled = true;
+      startBtn.textContent = 'Running…';
+      for (let i=0; i<steps.length; i++){
+        const s = steps[i];
+        const node = makeStep(s.text, 'active');
+        scanEl.appendChild(node);
+        await new Promise(r => setTimeout(r, s.delay));
+        node.classList.remove('active');
+        node.classList.add(s.kind === 'warn' ? 'warn' : 'ok');
+      }
+      personalMsg.textContent = `This was a safe lesson. If this had been a real malicious page, you could have been asked to enter your password or download something dangerous. Please slow down and double‑check links.`;
+      reveal.classList.remove('hidden');
+      resetBtn.classList.remove('hidden');
+      startBtn.disabled = false;
+      startBtn.textContent = 'Run Again';
+    }
+
+    startBtn.addEventListener('click', runScan);
+    resetBtn.addEventListener('click', clearScan);
+    revealReset.addEventListener('click', runScan);
+
+    if (!sessionStorage.getItem('ranOnce')){
+      sessionStorage.setItem('ranOnce','1');
+      setTimeout(() => runScan(), 400);
+    }
+  </script>
+</body>
+</html>
